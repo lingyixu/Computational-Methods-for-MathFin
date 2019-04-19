@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 # MF 796 - Assignment 6
-# Lingyi Xu, U77017242
 # Date: 2019-03-14
 
 
@@ -170,3 +169,4 @@ if flag == 'American':
         pile += (A**i)*bb
     vec_c = pile + (A**N)*ter_c
 '''
+
