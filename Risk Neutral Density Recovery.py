@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# MF 796 - Assignment 5 Problem 1
-# Lingyi Xu, U77017242
+# MF 796 - Assignment 5
 # Date: 2019-03-03
 
 
-
-# Problem 1
 # (a)
 import numpy as np
 from scipy.stats import norm
