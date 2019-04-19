@@ -4,7 +4,7 @@
 # Date: 2019-01-30
 
 
-# Problem 2
+
 ## 1. vanilla call price evaluation
 import scipy.integrate.quadrature as quad
 
