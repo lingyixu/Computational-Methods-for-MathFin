@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
 # MF 796 - Assignment 2
-# Lingyi Xu, U77017242
 # Date: 2019-01-30
 
 
-
-# Problem 1
 ## 1. Pricing under BS formula
 import numpy as np
 import scipy.stats as sc
@@ -81,70 +78,4 @@ for node in node_list:
     for i in np.arange(node):
         g_sum += np.exp(-r*t)*(np.exp(nodes[i])-K)*sc.norm.pdf(nodes[i], i_miu, i_std)*(b-a)/2*weights[i]
     g_val[node] = [g_sum, call_price-g_sum]
-
-
-
-# Problem 2
-## 1. vanilla call price evaluation
-import scipy.integrate.quadrature as quad
-
-S0 = 271.0
-K1 = 260.0
-t1 = 1.0
-r = 0
-sigma1 = 20.0
-
-def myfunc1(x):
-    return np.exp(-r*t1)*(x-K1)*sc.norm.pdf(x, S0, sigma1)
-van_price, van_error = quad(myfunc1, K1, S0+5*sigma1)
-
-
-## 2. contingent call price evaluation
-from scipy.stats import multivariate_normal
-from scipy.integrate import dblquad as dquad
-
-K2 = 250
-t2 = .5
-sigma2 = 15
-rho = .95
-
-mv = multivariate_normal(mean=[S0,S0], cov=[[1,rho],[rho,1]])
-
-def myfunc2(x1, x2):
-    return mv.pdf([x1,x2])*np.exp(-r*t1)*(x2-K1)
-
-con_price, _ = dquad(myfunc2, K1, S0+10*sigma1, lambda x2: S0-10*sigma2, lambda x2: K2)
-
-
-## 3. call price with different rho
-rho_list = [0.8, 0.5, 0.2]
-price_list1 = {}
-for rho in rho_list:
-    mv = multivariate_normal(mean=[S0,S0], cov=[[1,rho],[rho,1]])
-    def myfunc3(x1, x2):
-        return mv.pdf([x1,x2])*np.exp(-r*t1)*(x2-K1)
-    con_price, _ = dquad(myfunc3, K1, S0+10*sigma1, lambda x2: S0-10*sigma2, lambda x2: K2)
-    price_list1[rho] = con_price
-
-
-## 5. call price with different contingent price
-K2_list = [240, 230, 220]
-price_list2 = {}
-for K2 in K2_list:
-    def myfunc4(x1, x2):
-        return mv.pdf([x1,x2])*np.exp(-r*t1)*(x2-K1)
-    con_price, _ = dquad(myfunc3, K1, S0+10*sigma1, lambda x2: S0-10*sigma2, lambda x2: K2)
-    price_list2[K2] = con_price
-
-
-## 7. try contingent option price with extreme parameter values
-rho_new = 0
-K2_new = 100000
-
-mv = multivariate_normal(mean=[S0,S0], cov=[[1,rho_new],[rho_new,1]])
-
-def myfunc5(x1, x2):
-    return mv.pdf([x1,x2])*np.exp(-r*t1)*(x2-K1)
-
-con_price_new, _ = dquad(myfunc5, K1, S0+10*sigma1, lambda x2: S0-10*sigma2, lambda x2: K2_new)
 
