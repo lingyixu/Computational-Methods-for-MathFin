@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 # MF 796 - Assignment 1, Problem 5
-# Lingyi Xu, U77017242
 # Date: 2019-01-26
 
 
