@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 
 # MF 796 - Assignment 7
-# Lingyi Xu, U77017242
 # Date: 2019-04-02
 
 
 import numpy as np
 import matplotlib.pyplot as plt
-
-
 
 # 3. European option simulation under Heston model
 def Euro_simu(S0,K,q,r,T,v0,sig,k,theta,rho,n,N):
@@ -223,5 +220,4 @@ print(miu_w)
 print(miu_o)   
 print(err_w)
 print(err_o)
-
 
