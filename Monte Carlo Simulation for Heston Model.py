@@ -227,7 +227,9 @@ for N in [1000, 2000, 5000, 10000, 20000]:
 
 ############################# PART 3 ###############################
 # Knock-out call simulation under Heston model with control variate 
-#################################################################### 
+####################################################################
+
+# expect for a quicker convergence rate
 
 covval = np.cov(price1, price2)[0][1]
 cstar = -covval/sig1**2
