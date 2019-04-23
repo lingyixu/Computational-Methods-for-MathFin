@@ -42,13 +42,6 @@ def Euro_simu(S0,K,q,r,T,v0,sig,k,theta,rho,n,N):
     vt_vec = np.empty(n)
     payoff_vec = np.empty(n)
     price_vec = np.empty(n)
-    
-    '''
-    z1 = np.random.random(N)
-    z2 = np.random.random(N)
-    dwt1 = np.sqrt(dt)*z1
-    dwt2 = np.sqrt(dt)*(rho*z1+np.sqrt(1-rho**2)*z2)
-    '''
 
     for i in range(n):
     
@@ -228,11 +221,13 @@ for N in [1000, 2000, 5000, 10000, 20000]:
     err_pct = abs(m2-m1)/m1*100
     err = np.append(err, err_pct)
 
+    
+    
 
 
-######################### PART 3 ###########################
+############################# PART 3 ###############################
 # Knock-out call simulation under Heston model with control variate 
-############################################################ 
+#################################################################### 
 
 covval = np.cov(price1, price2)[0][1]
 cstar = -covval/sig1**2
