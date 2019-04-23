@@ -7,5 +7,5 @@ Main Topics:
 - Optimization: optimal portfolio construction (matrix diagonalization & pseudo-inverse); implied volatility surface calibration (Lagrange multiplier, root-finding)
 - Risk Neutral Density Recovery: Breeden-Litzenberger method
 - PDE Discretization: Barrier option pricing (finite difference approximation, explicit & implicit Euler scheme)
-- Monte Carlo Simulation: path-dependent option pricing
+- Monte Carlo Simulation: path-dependent option pricing, e.g. Heston model
 - Random Number Generator: SDE discretization, inverse transform method, acceptance-rejection method
