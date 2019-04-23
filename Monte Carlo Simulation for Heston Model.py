@@ -110,6 +110,8 @@ err = np.empty(0)
 
 for N in [1000, 2000, 5000, 10000, 20000]:
     
+    # pay attention to relative error convergence as N grows larger
+    
     price = Euro_simu(S0,K1,q,r,T,v0,sig,k,theta,rho,n,N)
     miu = np.mean(price)
     sig = np.std(price)
@@ -211,6 +213,8 @@ err_pct = abs(m2-m1)/m1*100
 err = np.empty(0)
 
 for N in [1000, 2000, 5000, 10000, 20000]:
+    
+    # pay attention to relative error convergence as N grows larger
     
     price = knock_simu(S0,K1,K2,q,r,T,v0,sig,k,theta,rho,n,N)
     miu = np.mean(price)
