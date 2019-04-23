@@ -46,7 +46,7 @@ sig = (sig1 + sig2)/2
 
 def sol_eq(s0,smax,k,T,N,M,sig,r,p,flag='European'):
     
-    # spot price: S0
+    # spot stock price: S0
     # upper boundary chosen for stock price: smax
     # strike price: k
     # time horizon: T
@@ -54,7 +54,7 @@ def sol_eq(s0,smax,k,T,N,M,sig,r,p,flag='European'):
     # number of strike grids: M
     # stock volatility (constant): sig
     # interest rate: r
-    # real world option price: p
+    # spot option price: p
     # flag: option type (European/American)
     
     # construct grids for time and strike
@@ -146,4 +146,28 @@ smax,N,M = s0*5,5000,500
 A, v1, _, _ = sol_eq(s0,smax,k1,T,N,M,sig,r,p)
 plt.plot(sorted(v1,reverse=True))
 plt.title('matrix A eigenvalue')
+
+
+
+
+########################## PART 4 ##########################
+# calcualte call spread with strike k1 and k2
+############################################################
+
+#  for European calls:
+
+_, _, c1, _ = sol_eq(s0,smax,k1,T,N,M,sig,r,p)
+_, _, c2, _ = sol_eq(s0,smax,k2,T,N,M,sig,r,p)
+arr1 = np.squeeze(np.asarray(c1))
+arr2 = np.squeeze(np.asarray(c2))
+spread1 = abs(arr1[int(M/5-1)]-arr2[int(M/5-1)])    # by construction, the spot option price lies in the (M/5)th position
+
+
+# for American calls:
+
+_, _, ca1, _ = sol_eq(s0,smax,k1,T,N,M,sig,r,p,'American')
+_, _, ca2, _ = sol_eq(s0,smax,k2,T,N,M,sig,r,p,'American')
+a1 = np.squeeze(np.asarray(ca1))
+a2 = np.squeeze(np.asarray(ca2))
+spread2 = abs(a1[int(M/5-1)]-a2[int(M/5-1)])
 
