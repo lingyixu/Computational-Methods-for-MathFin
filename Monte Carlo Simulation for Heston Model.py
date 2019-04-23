@@ -1,14 +1,39 @@
 # -*- coding: utf-8 -*-
 
-# MF 796 - Assignment 7
-# Date: 2019-04-02
+
+###################### HESTON MODEL ########################
+# dSt = (r-q)*St*dt + vt^0.5*St*dWt1              --- (1)
+# dvt = k*(theta-vt) + sig*vt^0.5*dWt2            --- (2)
+# Cov(dWt1, dWt2) = rho*dt                        --- (3)
+############################################################
 
 
 import numpy as np
 import matplotlib.pyplot as plt
 
-# 3. European option simulation under Heston model
+
+######################### PART 1 ###########################
+# European option simulation under Heston model 
+############################################################
+
+
+#########################################
+############# FUNCTION ZONE #############
+#########################################
+
 def Euro_simu(S0,K,q,r,T,v0,sig,k,theta,rho,n,N):
+    
+    # spot price: S0
+    # strike price: K
+    # dividend rate: q
+    # interest rate: r
+    # initial variance: v0
+    # stochastic term coefficient: sig
+    # volatility mean reverting speed: k
+    # long term volatility level: theta
+    # stochastic term correlation: rho
+    # number of simulations: n
+    # number of time intervals: N
     
     dt = T/N
     mean = (0,0)
@@ -37,7 +62,7 @@ def Euro_simu(S0,K,q,r,T,v0,sig,k,theta,rho,n,N):
             st += dst
             vt += dvt
             if vt<0:
-                vt = -vt
+                vt = -vt    # implicit boundary: vt>=0
     
         payoff_vec[i] = max(st-K1,0)
         price_vec[i] = payoff_vec[i]*np.exp(-r*T)
@@ -52,6 +77,12 @@ def Euro_simu(S0,K,q,r,T,v0,sig,k,theta,rho,n,N):
 
     return price_vec
 
+
+##########################################
+############### INPUT ZONE ###############
+##########################################
+
+# The following parameter values come from calibration of real market data
 
 S0 = 282
 K1 = 285
@@ -68,17 +99,20 @@ rho = 0
 n = 1000
 N = 5000
 
-
 price1 = Euro_simu(S0,K1,q,r,T,v0,sig,k,theta,rho,n,N)
 miu1 = np.mean(price1)
 sig1 = np.std(price1)
+
+
+##########################################
+####### RELATIVE ERROR CALCULATION #######
+##########################################
 
 n1 = np.mean(price1[:-1])
 n2 = np.mean(price1)
 err_pct = abs(n2-n1)/n1*100
 
 
-'''
 err = np.empty(0)
 
 for N in [1000, 2000, 5000, 10000, 20000]:
@@ -91,12 +125,19 @@ for N in [1000, 2000, 5000, 10000, 20000]:
     n2 = np.mean(price)
     err_pct = abs(n2-n1)/n1*100
     err = np.append(err, err_pct)
-'''
 
 
-# 4. Knock-out call simulation under Heston model
+
+    
+    
+######################### PART 2 ###########################
+# Knock-out call simulation under Heston model 
+############################################################ 
 
 def knock_simu(S0,K1,K2,q,r,T,v0,sig,k,theta,rho,n,N):
+    
+    # K1: strike price
+    # K2: upper bound for underlying stock price
 
     dt = T/N
     mean = (0,0)
@@ -141,6 +182,10 @@ def knock_simu(S0,K1,K2,q,r,T,v0,sig,k,theta,rho,n,N):
     return price_vec
 
 
+##########################################
+############### INPUT ZONE ###############
+##########################################
+
 S0 = 282
 K1 = 285
 K2 = 315
@@ -156,17 +201,20 @@ rho = 0
 n = 1000
 N = 5000
 
-
 price2 = knock_simu(S0,K1,K2,q,r,T,v0,sig,k,theta,rho,n,N)
 miu2 = np.mean(price2)
 sig2 = np.std(price2)
+
+
+##########################################
+####### RELATIVE ERROR CALCULATION #######
+##########################################
 
 m1 = np.mean(price2[:-1])
 m2 = np.mean(price2)
 err_pct = abs(m2-m1)/m1*100
 
 
-'''
 err = np.empty(0)
 
 for N in [1000, 2000, 5000, 10000, 20000]:
@@ -179,11 +227,12 @@ for N in [1000, 2000, 5000, 10000, 20000]:
     m2 = np.mean(price)
     err_pct = abs(m2-m1)/m1*100
     err = np.append(err, err_pct)
-'''
 
 
 
-# 5. Knock-out call simulation under Heston model with control variate
+######################### PART 3 ###########################
+# Knock-out call simulation under Heston model with control variate 
+############################################################ 
 
 covval = np.cov(price1, price2)[0][1]
 cstar = -covval/sig1**2
