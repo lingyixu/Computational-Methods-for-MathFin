@@ -110,6 +110,7 @@ def rn_prob2(K, delta=0.01):
     return (call_price(K-delta, sigl)+call_price(K+delta, sigu)-2*call_price(K, sig))/delta**2
 
 
+# plot the densities
 x = np.arange(80, 125, 0.01)
 xs = x[1:-1]
 plt.plot(xs, rn_prob1(xs), label='1 month')
@@ -168,6 +169,9 @@ plt.plot()
 price_1mondp = 0     # 1M European Digital Put Option with Strike 110
 price_3mondc = 0     # 3M European Digital Call Option with Strike 105
 price_2monc = 0      # 2M European Call Option with Strike 100
+
+
+# calculate prices using quadrature
 
 for st in np.arange(80, 110, 0.01):
     price_1mondp += rn_prob1(st)*0.01
