@@ -1,5 +1,4 @@
 # Computational-Methods-for-MathFin
-MF796 Course Assignments
 
 Main Topics:
 - Quadrature for numerical integration: option pricing with known density
