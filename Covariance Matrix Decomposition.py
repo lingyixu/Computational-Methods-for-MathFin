@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
 
-# MF 796 - Assignment 4
-# Date: 2019-02-17
+
+########################################################################
+# 1. Download and clean ETF historical data
+# 2. Calculate daily returns
+# 3. Calculate return covariance matrix and do eigenvalue decomposition
+# 4. Apply PCA and Show the variance ratio of each component
+########################################################################
 
 
-# (1)
+
+# 1. Download and clean ETF historical data
 import fix_yahoo_finance as yf
 yf.pdr_override()
 import pandas_datareader.data as pdr
@@ -21,7 +27,7 @@ def get_stock_prices_yahoo(ticker, start_date, end_date = 0):
     else: 
         return pdr.get_data_yahoo(ticker, start_date, end_date)["Adj Close"]
 
-ticker = pd.read_excel(r'E:\BU\19 Spring\MF796 Computational Methods of Mathematical Finance\Assignments\Assignment4\sp_500_stocks.xlsx')['Ticker'][150:250].values
+ticker = pd.read_excel(r'sp_500_stocks.xlsx')['Ticker'][150:250].values
 ticker_list = list(ticker)
 start_date = datetime.datetime(2014,1,1)
 end_date = datetime.datetime(2018,12,31)
@@ -29,10 +35,14 @@ price_daily_data = get_stock_prices_yahoo(ticker_list, start_date, end_date)
 price_daily_data = price_daily_data.fillna(method='ffill')
 price_daily_data = price_daily_data.fillna(method='bfill')
 
-# (2)
+
+
+# 2. Calculate daily returns
 return_daily_data = price_daily_data.pct_change().dropna()
 
-# (3)
+
+
+# 3. Calculate return covariance matrix and do eigenvalue decomposition
 cov = return_daily_data.cov()
 cov_array = cov.values
 e_vals,e_vecs = np.linalg.eig(cov_array)
@@ -46,7 +56,9 @@ plt.title('eigenvalues in order')
 plt.ylabel('eigenvalue')
 plt.show()
 
-# (4)
+
+
+# 4. Apply PCA and Show the variance ratio of each component
 from sklearn.decomposition import PCA
 
 # define the pca function
