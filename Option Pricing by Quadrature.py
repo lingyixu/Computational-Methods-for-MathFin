@@ -1,10 +1,12 @@
-# -*- coding: utf-8 -*-
-
-# MF 796 - Assignment 2
-# Date: 2019-01-30
 
 
-## 1. Pricing under BS formula
+#######################################################################
+# Three quadrature rules: Left Riemann rule, Midpoint rule, Gauss nodes
+# Compare quadrature results with BS results
+#######################################################################
+
+
+# 1. Pricing under BS formula
 import numpy as np
 import scipy.stats as sc
 import numpy.polynomial.legendre as pl
@@ -27,7 +29,8 @@ sigma = .2
 call_price = bs_price(S0,K,t,r,sigma)
 
 
-## 2. Pricing using quadurture methods
+
+# 2. Pricing using quadrature methods
 # dSt = miu * St * dt + sigma * St * dWt, Wt~N(0, t)
 # St = S0 * exp((r - 0.5 sigma^2)t + sigma * Wt)
 # ln(St) ~ N (ln(S0) + (r - 0.5 sigma^2)t, sigma^2 * t)
@@ -51,7 +54,8 @@ def mid_rule(node_num, lower, upper):
 
 node_list = [5,10,50,100]
 
-# left Riemann rule
+
+######## left Riemann rule #######
 l_val = {}
 for node in node_list:
     left_node = left_rule(node, a, b)
@@ -60,7 +64,8 @@ for node in node_list:
         l_sum += np.exp(-r*t)*(np.exp(l_node)-K)*sc.norm.pdf(l_node, i_miu, i_std)*(b-a)/node
     l_val[node] = [l_sum, call_price-l_sum]
 
-# midpoint rule
+    
+######## midpoint rule ########
 m_val = {}
 for node in node_list:
     mid_node = mid_rule(node, a, b)
@@ -69,7 +74,8 @@ for node in node_list:
         m_sum += np.exp(-r*t)*(np.exp(m_node)-K)*sc.norm.pdf(m_node, i_miu, i_std)*(b-a)/node
     m_val[node] = [m_sum, call_price-m_sum]
 
-# Gauss nodes
+    
+######## Gauss nodes ########
 g_val = {}
 for node in node_list:
     nodes, weights = pl.leggauss(node)
