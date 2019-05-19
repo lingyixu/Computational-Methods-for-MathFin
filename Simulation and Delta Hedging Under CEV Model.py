@@ -1,15 +1,25 @@
-# -*- coding: utf-8 -*-
 
-# MF 796 - Assignment 1, Problem 5
-# Date: 2019-01-26
+
+######################## CEV MODEL #########################
+# dSt = r * St * dt + sigma * St^beta * dWt
+# Given: S0 = 100, r = 0.0, beta = 1.0, sigma = 0.25
+############################################################
+
+
+
+################ PART 1: beta=1 (BS Model) #################
+# 1. Simulate to price ATM call under BS model
+# 2. Use BS formula to price ATM call
+# 3. Calculate call delta and build delta neutral portfolio
+# 4. Simulate the payoff of the hedged portfolio
+############################################################
 
 
 import numpy as np
 import scipy.stats as sc
-import math
 
 
-# (b) European call price by simulation
+# general simulation for CEV model
 def stock_price_simu(S0,r,sigma,beta,t,N,n): 
     # dSt = r * St * dt + sigma * St^beta * dWt
     # N denotes # of simulations, n denotes # of periods
@@ -24,7 +34,7 @@ def stock_price_simu(S0,r,sigma,beta,t,N,n):
     St = S0
     
     for i in range(N):
-        dWt = np.random.normal(loc = 0, scale = math.sqrt(dt), size = n)
+        dWt = np.random.normal(loc = 0, scale = np.sqrt(dt), size = n)
         dSt = r*St*dt + sigma*(St**beta)*dWt
         St = S0 + sum(dSt)
         St_list[i] = St
@@ -48,6 +58,7 @@ def eu_call_price(S0,K,r,sigma,beta,t,N,n):
     return payoff, call_mean, call_std
 
 
+# 1. Simulate to price ATM call under BS model
 S0 = 100
 r = 0.0
 beta = 1.0
@@ -61,27 +72,28 @@ n = 10000
 _, price, _ = eu_call_price(S0,K,r,sigma,beta,t,N,n)
 
 
-# (c) European call price by BS model
+
+# 2. Use BS formula to price ATM call
 def bs_price(r,sigma,T,S0,K):
     # calculate the option price via Black-Scholes Formula
     
     d1 = 1.0/(sigma*np.sqrt(T))*(np.log(S0/K)+(r+.5*(sigma**2))*T)
     d2 = d1 - sigma*np.sqrt(T)
-    BS_price = S0*sc.norm.cdf(d1) - math.exp(-r*T)*K*sc.norm.cdf(d2)
+    BS_price = S0*sc.norm.cdf(d1) - np.exp(-r*T)*K*sc.norm.cdf(d2)
     
     return BS_price, d1, d2
 
 BS_price, d1, d2 = bs_price(r,sigma,t,S0,K)
 
 
-# (d) option delta
+
+# 3. Calculate call delta and build delta neutral portfolio
 delta = sc.norm.cdf(d1)
+share = delta     # short position in stocks
 
 
-# (e) short position in stocks
-share = delta
 
-# (f) portfolio value
+# 4. Simulate the payoff of the hedged portfolio
 def port_val_simu(S0,K,r,sigma,beta,delta,t,N,n):
     
     St_list = np.empty(N)
@@ -89,7 +101,7 @@ def port_val_simu(S0,K,r,sigma,beta,delta,t,N,n):
     St = S0
     
     for i in range(N):
-        dWt = np.random.normal(loc = 0, scale = math.sqrt(dt), size = n)
+        dWt = np.random.normal(loc = 0, scale = np.sqrt(dt), size = n)
         dSt = r*St*dt + sigma*(St**beta)*dWt
         St = S0 + sum(dSt)
         St_list[i] = St
@@ -101,12 +113,20 @@ def port_val_simu(S0,K,r,sigma,beta,delta,t,N,n):
 port_val = port_val_simu(S0,K,r,sigma,beta,delta,t,N,n)
 
 
-# (g) beta value change
+
+
+################ PART 2: General CEV Model #################
+# 1. Re-simulate hedged portfolio payoff under beta=0.5
+# 2. Re-simulate hedged portfolio payoff under sigma=0.4
+############################################################
+
+
+# 1. Re-simulate hedged portfolio payoff under beta=0.5
 beta_new = 0.5
 port_val_1 = port_val_simu(S0,K,r,sigma,beta_new,delta,t,N,n)
 
 
-# (h) sigma value change
+# 2. Re-simulate hedged portfolio payoff under sigma=0.4
 sigma_new = 0.4
 d1_new = 1.0/(sigma_new*np.sqrt(t))*(np.log(S0/K)+(r+.5*(sigma_new**2))*t)
 delta_new = sc.norm.cdf(d1_new)
