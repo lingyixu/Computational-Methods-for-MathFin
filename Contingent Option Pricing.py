@@ -1,11 +1,15 @@
-# -*- coding: utf-8 -*-
-
-# MF 796 - Assignment 2
-# Date: 2019-01-30
 
 
+###########################################################################
+# Contingent option: payoff is contingent on the dynamics of another option
+# Vanilla option VS contingent option
+# Influence of option correlation change
+# Influence of contingent condition change
+# Given sigma1 = 0.2, sigma2 = 0.15, rho = 0.95
+###########################################################################
 
-## 1. vanilla call price evaluation
+
+# 1. vanilla call pricing using quadrature
 import scipy.integrate.quadrature as quad
 
 S0 = 271.0
@@ -16,10 +20,12 @@ sigma1 = 20.0
 
 def myfunc1(x):
     return np.exp(-r*t1)*(x-K1)*sc.norm.pdf(x, S0, sigma1)
+
 van_price, van_error = quad(myfunc1, K1, S0+5*sigma1)
 
 
-## 2. contingent call price evaluation
+
+# 2. contingent call pricing using quadrature
 from scipy.stats import multivariate_normal
 from scipy.integrate import dblquad as dquad
 
@@ -36,9 +42,11 @@ def myfunc2(x1, x2):
 con_price, _ = dquad(myfunc2, K1, S0+10*sigma1, lambda x2: S0-10*sigma2, lambda x2: K2)
 
 
-## 3. call price with different rho
+
+# 3. call price with different correlations
 rho_list = [0.8, 0.5, 0.2]
 price_list1 = {}
+
 for rho in rho_list:
     mv = multivariate_normal(mean=[S0,S0], cov=[[1,rho],[rho,1]])
     def myfunc3(x1, x2):
@@ -47,7 +55,8 @@ for rho in rho_list:
     price_list1[rho] = con_price
 
 
-## 5. call price with different contingent price
+    
+# 4. call price with different contingent conditions
 K2_list = [240, 230, 220]
 price_list2 = {}
 for K2 in K2_list:
@@ -57,7 +66,8 @@ for K2 in K2_list:
     price_list2[K2] = con_price
 
 
-## 7. try contingent option price with extreme parameter values
+    
+# 5. try contingent option price with extreme parameter values
 rho_new = 0
 K2_new = 100000
 
