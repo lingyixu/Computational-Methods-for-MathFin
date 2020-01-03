@@ -1,4 +1,4 @@
-# Computational-Methods-for-MathFin
+# MF796, Computational Methods for MathFin
 
 Main Topics:
 - Quadrature for numerical integration: option pricing with known density
